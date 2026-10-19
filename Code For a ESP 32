@@ -79,8 +79,7 @@ void loop(){
         Serial.write(c);                    // print it out the serial monitor
         header += c;
         if (c == '\n') {                    // if the byte is a newline character
-          // if the current line is blank, you got 
-two newline characters in a row.
+          // if the current line is blank, you got two newline characters in a row.
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0) {
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
@@ -91,7 +90,7 @@ two newline characters in a row.
             client.println();
             
             // turns the GPIOs on and off  
-             if (header.indexOf("GET /25/on") >= 0) {
+            if (header.indexOf("GET /25/on") >= 0) {
               Serial.println("GPIO 25 on");
               output25State = "on";
               digitalWrite(output25, HIGH);
@@ -100,9 +99,9 @@ two newline characters in a row.
               output25State = "off";
               digitalWrite(output25, LOW);
             }
-             if (header.indexOf("GET /33/on") >= 0) {
+            if (header.indexOf("GET /33/on") >= 0) {
               Serial.println("GPIO 33 on");
-              output25State = "on";
+              output33State = "on";                 // FIXED: was output25State
               digitalWrite(output33, HIGH);
             } else if (header.indexOf("GET /33/off") >= 0) {
               Serial.println("GPIO 33 off");
@@ -141,16 +140,19 @@ two newline characters in a row.
             // Web Page Heading
             client.println("<body><h1>Test No.73 Ele Muscle</h1>");
             
+            // Display current state, and ON/OFF buttons for GPIO 25
             client.println("<p>Right Left Leg- State " + output25State + "</p>");
-            // If the output26State is off, it displays the ON button       
+            // If the output25State is off, it displays the ON button       
             if (output25State=="off") {
               client.println("<p><a href=\"/25/on\"><button class=\"button\">ON</button></a></p>");
             } else {
               client.println("<p><a href=\"/25/off\"><button class=\"button button2\">OFF</button></a></p>");
             } 
-            client.println("<p>Right Right Leg- State " + output25State + "</p>");
-            // If the output26State is off, it displays the ON button       
-            if (output25State=="off") {
+
+            // Display current state, and ON/OFF buttons for GPIO 33
+            client.println("<p>Right Right Leg- State " + output33State + "</p>");   // FIXED: was output25State
+            // If the output33State is off, it displays the ON button       
+            if (output33State=="off") {                                               // FIXED: was output25State
               client.println("<p><a href=\"/33/on\"><button class=\"button\">ON</button></a></p>");
             } else {
               client.println("<p><a href=\"/33/off\"><button class=\"button button2\">OFF</button></a></p>");
